@@ -24,8 +24,6 @@ namespace WebAPIAutores.Controllers
         [HttpGet]
         //[ResponseCache(Duration = 10)] //Utiliza el caché configurado, el número representa el tiempo en segundos que se usará la misma data
         //[Authorize]  //Sirve para proteger los endpoints, se configura previamente en Program.cs o Startup.cs
-        //Uso de filtros previamente configurados
-        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public async Task<ActionResult<List<Autor>>> GetAutores()
         {
             throw new System.NotImplementedException();

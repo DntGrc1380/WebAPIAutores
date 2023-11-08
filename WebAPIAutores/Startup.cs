@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebAPIAutores.Filtros;
 using WebAPIAutores.Middlewares;
-using WebAPIAutores.Servicios;
 
 namespace WebAPIAutores
 {
@@ -34,14 +33,7 @@ namespace WebAPIAutores
             services.AddDbContext<ApplicationDbContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("defaultConn")));
 
-            //Configurar Filtros: MiFiltroDeAccion
-            services.AddTransient<MiFiltroDeAccion>();
 
-            //Configurar servicio global (escribir archivo)
-            services.AddHostedService<EscribirEnArchivo>();
-
-            //configuración para usar cahcé en la aplicación
-            services.AddResponseCaching();
 
             //configuración para utilizar autenticación
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
@@ -89,16 +81,6 @@ namespace WebAPIAutores
             //Forma 2 (Mejor forma)
             app.UseLogRespuestaHTTP();
 
-            //Condicionar middleware por ruta
-            app.Map("/ruta1", app =>
-            {
-                //Con app.Run se ejecuta una ación y se corta la acción de los siguientes middlewares
-                app.Run(async contexto =>
-                {
-                    await contexto.Response.WriteAsync("Interceptando tubería");
-                });
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
@@ -109,8 +91,6 @@ namespace WebAPIAutores
 
             app.UseRouting();
 
-            //Filtro de caché, viene por defecto en .Net Core
-            app.UseResponseCaching();
 
             //autorization debe ir antes de endPoints para poder asegurarlos
             app.UseAuthorization();
